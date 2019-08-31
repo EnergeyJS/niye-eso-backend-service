@@ -1,6 +1,7 @@
 const express = require('express')
 const userRoutes = require('./api/user/user.route')
 const authRoutes = require('./api/auth/auth.route')
+const orderRoutes = require('./api/order/order.route')
 
 const router = express.Router()
 
@@ -28,5 +29,10 @@ router.use('/users', userRoutes)
  * @apiGroup Auth
  */
 router.use('/auth', authRoutes)
+/**
+ * @apiDescription Mounts order routes at /order
+ * @apiGroup Sell
+ */
+router.use('/order', orderRoutes)
 
 module.exports = router
