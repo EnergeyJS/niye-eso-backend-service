@@ -1,21 +1,27 @@
+
 const jwt = require('jsonwebtoken')
 const env = require('../config/environment')
+const expressJwt = require('express-jwt')
 
-/**
- * Create JSON Web Token
- * @param {Object} payload payload for jwt
- * @param {String} expiresIn expire time i.e. '1d', '1h' or '20m'
- */
-const create = (payload, expiresIn) => jwt.sign(payload,
-  env.jwtSecret, { expiresIn })
+const create = (payload, expiresIn) => {
+  jwt.sign(payload, env.jwtSecret, { expiresIn })
+}
 
-/**
- * Get payload data from JWT
- * @param {String} token JWT token
- */
 const getData = (token) => jwt.decode(token)
+
+const guardUser = () => expressJwt({ secret: env.jwtSecret, requestProperty: 'auth' })
+
+const adminCheck = (req, res, next) => {
+  if ((req.auth.role === 'dataEntry' && req.auth.status === 'active') || (req.auth.role === 'checker' && req.auth.status === 'active')) {
+    return next()
+  } else {
+    res.status(400).json({ error: 'You are suspended or not admin' })
+  }
+}
 
 module.exports = {
   create,
-  getData
+  getData,
+  guardUser,
+  adminCheck
 }

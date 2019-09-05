@@ -1,12 +1,10 @@
-const Promise = require('bluebird')
+
 const mongoose = require('mongoose')
-const httpStatus = require('http-status')
-const APIError = require('../../libs/APIError')
 
 /**
- * User Schema
+ * Product Schema
  */
-const UserSchema = new mongoose.Schema({
+const ProductSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true
@@ -15,55 +13,54 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  role: {
-      type: String,
-      required: true
+  image: {
+    type: String
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  quantity: {
+    type: Number,
+    required: true
+  },
+  vendors: {
+    type: String
+  },
+  stock: {
+    type: String
+  },
+  expires: {
+    type: String,
+    required: true
+  },
+  variant: [{
+    type: String
+  }],
+  offer: {
+    type: String
   }
-},
-)
+})
 
 /**
  * Methods
  */
-UserSchema.method({
+ProductSchema.method({
 })
 
 /**
  * Statics
  */
-UserSchema.statics = {
-  /**
-   * Get User
-   * @param {Object} conditions - conditions to find user for
-   * @returns {Promise<User, Error>}
-   */
-  async get (conditions) {
-    const user = await this.findOne(conditions).exec()
-    if (user) {
-      return user
-    }
-    const err = new APIError('No such user exists!', httpStatus.NOT_FOUND)
-    return Promise.reject(err)
-  },
+ProductSchema.statics = {
 
-  /**
-   * List users in decending order of 'createdAt' timestamp
-   * @param {number} skip - Number of users to be skipped
-   * @param {number} limit - Limit number of users to be returned
-   * @returns {Promise<User[], Error>}
-   */
-  async list ({ skip = 0, limit = 50 } = {}) {
-    const users = await this.find()
-      .select('-password')
+  async list ({ skip = 0, limit = 100 } = {}) {
+    const products = await this.find()
       .sort({ createdAt: -1 })
       .skip(+skip)
       .limit(+limit)
       .exec()
-    return users
+    return products
   }
 }
 
-/**
- * @typedef User
- */
-module.exports = mongoose.model('User', UserSchema)
+module.exports = mongoose.model('Product', ProductSchema)

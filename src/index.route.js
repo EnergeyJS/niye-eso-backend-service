@@ -1,4 +1,5 @@
 const express = require('express')
+const productRoutes = require('./api/product/product.route')
 const userRoutes = require('./api/user/user.route')
 const authRoutes = require('./api/auth/auth.route')
 
@@ -28,5 +29,7 @@ router.use('/users', userRoutes)
  * @apiGroup Auth
  */
 router.use('/auth', authRoutes)
+
+router.use('/products', productRoutes)
 
 module.exports = router
