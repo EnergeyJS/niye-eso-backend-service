@@ -1,6 +1,22 @@
 const _ = require('lodash')
+const APIError = require('../../libs/APIError')
+const httpStatus = require('http-status')
 
 const Product = require('./product.model')
+
+const productData = [
+  '_id',
+  'name',
+  'price',
+  'image',
+  'description',
+  'quantity',
+  'vendors',
+  'stock',
+  'expires',
+  'variant',
+  'offer'
+]
 
 async function load (req, res, next) {
   const id = req.params.productId
@@ -15,62 +31,35 @@ async function load (req, res, next) {
 
 function get (req, res, next) {
   const product = req.product
-  const sendProduct = _.pick(product, [
-    '_id',
-    'name',
-    'price',
-    'image',
-    'description',
-    'quantity',
-    'vendors',
-    'stock',
-    'expires',
-    'variant',
-    'offer'
-
-  ])
+  const sendProduct = _.pick(product, productData)
   return res.json(sendProduct)
 }
 
 async function create (req, res, next) {
   try {
-    const {
-      name,
-      price,
-      description,
-      quantity,
-      vendors,
-      stock,
-      expires,
-      variant,
-      offer
-    } = req.body
-    const product = new Product({
-      name,
-      price,
-      description,
-      quantity,
-      vendors,
-      stock,
-      expires,
-      variant,
-      offer
-    })
+    const product = new Product(_.pick(req.body, productData))
     product.image = req.file ? req.file.location : null
     const savedProduct = await product.save()
-    const sendProduct = _.pick(savedProduct, [
-      'name',
-      'price',
-      'image',
-      'description',
-      'quantity',
-      'vendors',
-      'stock',
-      'expires',
-      'variant',
-      'offer'
-    ])
+    const sendProduct = _.pick(savedProduct, productData)
     return res.json(sendProduct)
+  } catch (e) {
+    let err = e
+    if (err.code && err.code === 11000) {
+      err = new APIError(err.errmsg, httpStatus.BAD_REQUEST, false)
+    }
+    return next(err)
+  }
+}
+
+async function update (req, res, next) {
+  try {
+    const product = req.product
+    const updateProduct = _.pick(req.body, productData)
+    Object.keys(updateProduct).map(key => {
+      product[key] = updateProduct[key]
+    })
+    const savedProduct = await product.save()
+    return res.json(savedProduct)
   } catch (e) {
     next(e)
   }
@@ -80,6 +69,30 @@ async function list (req, res, next) {
     const products = await Product.list(req.query)
     return res.json(products)
   } catch (e) {
+    let err = e
+    if (err.code && err.code === 11000) {
+      err = new APIError(err.errmsg, httpStatus.BAD_REQUEST, false)
+    }
+    return next(err)
+  }
+}
+async function listAdmin (req, res, next) {
+  try {
+    const { page, limit } = req.query
+    const products = await Product.list({ page, limit })
+    return res.json(products)
+  } catch (e) {
+    next(e)
+  }
+}
+
+async function remove (req, res, next) {
+  try {
+    const product = req.product
+    const deletedProduct = await product.remove()
+    const sendProperty = _.pick(deletedProduct, ['_id', 'name'])
+    return res.json(sendProperty)
+  } catch (e) {
     next(e)
   }
 }
@@ -87,6 +100,9 @@ async function list (req, res, next) {
 module.exports = {
   load,
   list,
+  listAdmin,
   get,
-  create
+  create,
+  update,
+  remove
 }
