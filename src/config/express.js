@@ -6,7 +6,7 @@ const methodOverride = require('method-override')
 const validation = require('express-validation')
 const httpStatus = require('http-status')
 const logger = require('@skarif2/logger')
-
+const path = require('path')
 const env = require('./environment')
 const routes = require('../index.route')
 const APIError = require('../libs/APIError')
@@ -56,6 +56,13 @@ app.use(helmet())
  * Mounts api routes at /api
  */
 app.use('/api', routes)
+
+// Set static folder
+app.use('/static', express.static('public'))
+app.use('/docs', express.static('public/docs'))
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'docs', 'index.html'))
+})
 
 /**
  * If error is not an instanceOf APIError, convert it.

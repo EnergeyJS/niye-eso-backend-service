@@ -51,7 +51,6 @@ module.exports = {
   get: {
     params: {
       productId: Joi.string().required()
-
     }
   },
   delete: {
