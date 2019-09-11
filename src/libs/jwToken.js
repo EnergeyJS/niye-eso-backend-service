@@ -4,7 +4,7 @@ const env = require('../config/environment')
 const expressJwt = require('express-jwt')
 
 const create = (payload, expiresIn) => {
-  jwt.sign(payload, env.jwtSecret, { expiresIn })
+  return jwt.sign(payload, env.jwtSecret, { expiresIn })
 }
 
 const getData = (token) => jwt.decode(token)

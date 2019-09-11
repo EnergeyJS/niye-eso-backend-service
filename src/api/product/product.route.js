@@ -5,7 +5,7 @@ const validate = require('express-validation')
 const productParam = require('./product.param')
 const productCntrl = require('./product.controller')
 
-// const { guardUser, adminCheck } = require('../../libs/jwToken')
+const { guardUser, adminCheck } = require('../../libs/jwToken')
 
 const router = Router()
 

@@ -6,7 +6,7 @@ const authCtrl = require('./auth.controller')
 const router = Router()
 
 router.route('/login')
- 
+
   .post(validate(authParam.login), authCtrl.login)
 
 module.exports = router

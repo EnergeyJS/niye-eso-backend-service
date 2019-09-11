@@ -20,6 +20,7 @@ async function login (req, res, next) {
         mobileNumber: user.mobileNumber
       }
       const token = JWToken.create(payload, '20m')
+      console.log(token)
       return res.json({
         token,
         user: {

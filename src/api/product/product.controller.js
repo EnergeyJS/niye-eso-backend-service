@@ -37,6 +37,7 @@ function get (req, res, next) {
 
 async function create (req, res, next) {
   try {
+    console.log(req.body)
     const product = new Product(_.pick(req.body, productData))
     product.image = req.file ? req.file.location : null
     const savedProduct = await product.save()
