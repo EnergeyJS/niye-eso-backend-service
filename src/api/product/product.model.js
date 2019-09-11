@@ -13,9 +13,6 @@ const ProductSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  image: {
-    type: String
-  },
   description: {
     type: String,
     required: true
@@ -34,9 +31,15 @@ const ProductSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  variant: [{
-    type: String
-  }],
+  variant: [
+    {
+      variantType: {
+        type: String
+      },
+      image: {
+        type: String
+      }
+    }],
   offer: {
     type: String
   }

@@ -11,6 +11,11 @@ router.use('/users', userRoutes)
 
 router.use('/auth', authRoutes)
 
+/**
+ * @apiDescription Mounts product routes at /products
+ * @apiGroup Products
+ */
+
 router.use('/products', productRoutes)
 
 module.exports = router
