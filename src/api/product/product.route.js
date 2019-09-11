@@ -5,7 +5,7 @@ const validate = require('express-validation')
 const productParam = require('./product.param')
 const productCntrl = require('./product.controller')
 
-const { guardUser, adminCheck } = require('../../libs/jwToken')
+const { guardUser } = require('../../libs/jwToken')
 
 const router = Router()
 
@@ -51,7 +51,7 @@ router.route('/')
    * @apiError    {Object} error Error response
    */
 
-  .post(validate(productParam.create), productCntrl.create)
+  .post(guardUser(), validate(productParam.create), productCntrl.create)
 
 router.route('/:productId')
 /**
@@ -172,7 +172,7 @@ router
    * @apiSuccess  {string} offer offer of product
    * @apiError    {Object} error Error response
    */
-  .put(validate(productParam.update), productCntrl.update)
+  .put(guardUser(), validate(productParam.update), productCntrl.update)
 
 /**
    * @api {delete} /api/product/:productId/admin Delete a Product (Admin)
@@ -187,7 +187,7 @@ router
    * @apiError {Object} error Error response
    */
 
-  .delete(validate(productParam.delete), productCntrl.remove)
+  .delete(guardUser(), validate(productParam.delete), productCntrl.remove)
 
 router.param('productId', productCntrl.load)
 
