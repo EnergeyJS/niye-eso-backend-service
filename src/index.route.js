@@ -1,5 +1,6 @@
 const express = require('express')
 const productRoutes = require('./api/product/product.route')
+const orderRoutes = require('./api/Order/order.route')
 const userRoutes = require('./api/user/user.route')
 const authRoutes = require('./api/auth/auth.route')
 
@@ -17,5 +18,6 @@ router.use('/auth', authRoutes)
  */
 
 router.use('/products', productRoutes)
+router.use('/order', orderRoutes)
 
 module.exports = router

@@ -7,17 +7,19 @@ module.exports = {
     },
     body: {
       name: Joi.string().required(),
-      price: Joi.string().required(),
+      price: Joi.number().required(),
       description: Joi.string().required(),
-      quantity: Joi.string().required(),
-      vendors: Joi.string(),
-      stock: Joi.string(),
-      expires: Joi.string().required(),
-      variant: Joi.array().items(Joi.object({
-        variantType: Joi.string().required(),
-        image: Joi.string()
+      measure: Joi.array().items(Joi.object({
+        size: Joi.string().required(),
+        quantity: Joi.string()
       })),
-      offer: Joi.string()
+      vendors: Joi.string(),
+      stock: Joi.boolean(),
+      expires: Joi.date().required(),
+      variant: Joi.array().items(Joi.object({
+        color: Joi.string().required(),
+        image: Joi.string()
+      }))
     }
   },
   update: {
@@ -29,17 +31,19 @@ module.exports = {
     },
     body: {
       name: Joi.string().required(),
-      price: Joi.string().required(),
+      price: Joi.number().required(),
       description: Joi.string().required(),
-      quantity: Joi.string().required(),
-      vendors: Joi.string(),
-      stock: Joi.string(),
-      expires: Joi.string().required(),
-      variant: Joi.array().items(Joi.object({
-        variantType: Joi.string().required(),
-        image: Joi.string()
+      measure: Joi.array().items(Joi.object({
+        size: Joi.string().required(),
+        quantity: Joi.string()
       })),
-      offer: Joi.string()
+      vendors: Joi.string(),
+      stock: Joi.boolean(),
+      expires: Joi.date().required(),
+      variant: Joi.array().items(Joi.object({
+        color: Joi.string().required(),
+        image: Joi.string()
+      }))
     }
   },
   list: {

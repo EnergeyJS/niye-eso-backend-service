@@ -17,23 +17,36 @@ const ProductSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  quantity: {
-    type: Number,
-    required: true
+  measure: [
+    {
+      size: {
+        type: String,
+        required: true
+      },
+      quantity: {
+        type: Number,
+        required: true
+      }
+    }
+  ],
+  Brands: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Brand'
   },
   vendors: {
     type: String
   },
   stock: {
-    type: String
+    type: Boolean
   },
   expires: {
-    type: String,
+    type: Date,
+    default: Date.now,
     required: true
   },
   variant: [
     {
-      variantType: {
+      color: {
         type: String
       },
       image: {
@@ -41,7 +54,8 @@ const ProductSchema = new mongoose.Schema({
       }
     }],
   offer: {
-    type: String
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Offer'
   }
 })
 
