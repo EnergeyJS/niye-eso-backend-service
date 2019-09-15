@@ -1,8 +1,13 @@
 const _ = require('lodash')
 const APIError = require('../../libs/APIError')
 const httpStatus = require('http-status')
+const freeUpload = require('freeupload')
 
 const Product = require('./product.model')
+
+const keyFilename = 'niyeeso-freeupload-1b463438ef47.json'
+const bucketName = 'niyeeso-freeupload.appspot.com'
+const projectId = 'niyeeso-freeupload'
 
 const productData = [
   '_id',
@@ -38,6 +43,14 @@ async function create (req, res, next) {
   try {
     console.log(req.body)
     const product = new Product(_.pick(req.body, productData))
+    if (req.file) {
+      try {
+        let url = await freeUpload.upload(req.file, keyFilename, bucketName, projectId)
+        product.variant.push({ color: 'red', image: url })
+      } catch (err) {
+        next(err)
+      }
+    }
     product.image = req.file ? req.file.location : null
     const savedProduct = await product.save()
     const sendProduct = _.pick(savedProduct, productData)

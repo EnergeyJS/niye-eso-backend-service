@@ -1,11 +1,19 @@
 
 const Router = require('express')
 const validate = require('express-validation')
+const Multer = require('multer')
 
 const productParam = require('./product.param')
 const productCntrl = require('./product.controller')
 
 const { guardUser } = require('../../libs/jwToken')
+
+const multer = Multer({
+  storage: Multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024 // no larger than 5mb, you can change as needed.
+  }
+})
 
 const router = Router()
 
@@ -51,7 +59,7 @@ router.route('/')
    * @apiError    {Object} error Error response
    */
 
-  .post(guardUser(), validate(productParam.create), productCntrl.create)
+  .post(guardUser(), multer.single('variant'), validate(productParam.create), productCntrl.create)
 
 router.route('/:productId')
 /**
