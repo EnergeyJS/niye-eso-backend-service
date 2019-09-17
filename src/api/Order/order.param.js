@@ -20,8 +20,11 @@ module.exports = {
       authorization: Joi.string().required()
     },
     body: {
+      user: Joi.string().required(),
       product: Joi.array().items(Joi.object({
         productId: Joi.string().required(),
+        productName: Joi.string().required(),
+        productImage: Joi.string().required(),
         quantity: Joi.number().required(),
         pricePerQuantity: Joi.string().required(),
         offerPrice: Joi.number(),
