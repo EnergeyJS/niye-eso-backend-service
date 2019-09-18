@@ -51,7 +51,7 @@ async function create (req, res, next) {
         next(err)
       }
     }
-    product.image = req.file ? req.file.location : null
+    // product.image = req.file ? req.file.location : null
     const savedProduct = await product.save()
     const sendProduct = _.pick(savedProduct, productData)
     return res.json(sendProduct)

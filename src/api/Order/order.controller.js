@@ -25,9 +25,13 @@ async function get (req, res, next) {
 
 async function create (req, res, next) {
   try {
+    console.log('userId', req.auth._id)
     const orderedProduct = new OrderedProduct(_.pick(req.body, OrderedData))
+    orderedProduct.user = req.auth._id
     const saveOrderedProduct = await orderedProduct.save()
-    return res.json(saveOrderedProduct)
+    const sendOrderedProduct = _.pick(saveOrderedProduct, OrderedData)
+    console.log(saveOrderedProduct)
+    return res.json(sendOrderedProduct)
   } catch (e) {
     let err = e
     if (err.code && err.code === 11000) {
