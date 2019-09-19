@@ -20,16 +20,16 @@ module.exports = {
       authorization: Joi.string().required()
     },
     body: {
-      user: Joi.string().required(),
-      product: Joi.array().items(Joi.object({
-        productId: Joi.string().required(),
-        productName: Joi.string().required(),
-        productImage: Joi.string().required(),
-        quantity: Joi.number().required(),
-        pricePerQuantity: Joi.string().required(),
+      user: Joi.string(),
+      OrderedProduct: Joi.array().items(Joi.object({
+        productId: Joi.string(),
+        productName: Joi.string(),
+        productImage: Joi.string(),
+        quantity: Joi.number(),
+        pricePerQuantity: Joi.string(),
         offerPrice: Joi.number(),
-        calculatedPriceforPerQuantity: Joi.number().required(),
-        TotalPrice: Joi.number().required()
+        calculatedPriceforPerQuantity: Joi.number(),
+        TotalPrice: Joi.number()
       }))
     }
   },

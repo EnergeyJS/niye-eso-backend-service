@@ -12,7 +12,7 @@ const getData = (token) => jwt.decode(token)
 const guardUser = () => expressJwt({ secret: env.jwtSecret, requestProperty: 'auth' })
 
 const adminCheck = (req, res, next) => {
-  if ((req.auth.role === 'admin' && req.auth.status === 'active')) {
+  if ((req.auth.role === 'admin')) {
     return next()
   } else {
     res.status(400).json({ error: 'You are suspended or not admin' })

@@ -18,6 +18,6 @@ router.use('/auth', authRoutes)
  */
 
 router.use('/products', productRoutes)
-router.use('/order', orderRoutes)
+router.use('/orders', orderRoutes)
 
 module.exports = router

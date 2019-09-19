@@ -8,16 +8,17 @@ const OrderedProduct = require('./order.model')
 const OrderedData = [
   'user',
   'OrderedProduct'
-
 ]
 
 async function get (req, res, next) {
+  console.log('In get----------------------')
   try {
     const id = req.params.OrderedId
     console.log(id)
-    const OrderededData = await OrderedProduct.findOne({ '_id': id })
-    const sendOrderedData = _.pick(OrderededData, ['OrderedProduct'])
-    return res.json(sendOrderedData)
+    const OrderededData = await OrderedProduct
+      .findOne({ '_id': id })
+      .populate('OrderedProduct.productId')
+    return res.json(OrderededData)
   } catch (e) {
     next(e)
   }
@@ -25,7 +26,7 @@ async function get (req, res, next) {
 
 async function create (req, res, next) {
   try {
-    console.log('userId', req.auth._id)
+    console.log('userId....', req.auth._id)
     const orderedProduct = new OrderedProduct(_.pick(req.body, OrderedData))
     orderedProduct.user = req.auth._id
     const saveOrderedProduct = await orderedProduct.save()
@@ -42,6 +43,7 @@ async function create (req, res, next) {
 }
 
 async function list (req, res, next) {
+  console.log('userId....', req.auth._id)
   try {
     const OrderedProducts = await OrderedProduct.list(req.query)
     return res.json(OrderedProducts)

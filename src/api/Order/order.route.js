@@ -1,7 +1,7 @@
 const Router = require('express')
-// const validate = require('express-validation')
+const validate = require('express-validation')
 
-// const orderParam = require('./order.param')
+const orderParam = require('./order.param')
 const orderCntrl = require('./order.controller')
 
 const { guardUser } = require('../../libs/jwToken')
@@ -12,7 +12,7 @@ router.route('/')
 
   .get(guardUser(), orderCntrl.list)
 
-  .post(guardUser(), orderCntrl.create)
+  .post(guardUser(), validate(orderParam.create), orderCntrl.create)
 
 router.route('/:OrderedId')
 
