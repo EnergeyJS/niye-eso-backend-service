@@ -1,6 +1,69 @@
 define({ "api": [
   {
     "type": "post",
+    "url": "/api/auth/login",
+    "title": "User Login",
+    "name": "User_Login",
+    "group": "Auth",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "body": [
+          {
+            "group": "body",
+            "type": "String",
+            "optional": false,
+            "field": "username",
+            "description": "<p>username of the User</p>"
+          },
+          {
+            "group": "body",
+            "type": "String",
+            "optional": false,
+            "field": "password",
+            "description": "<p>Password of the User</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "token",
+            "description": "<p>JWT token</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "user",
+            "description": "<p>User information(_id, username, mobileNumber)</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "Object",
+            "optional": false,
+            "field": "error",
+            "description": "<p>Error response</p>"
+          }
+        ]
+      }
+    },
+    "filename": "src/api/auth/auth.route.js",
+    "groupTitle": "Auth"
+  },
+  {
+    "type": "post",
     "url": "/api/orders",
     "title": "Create Order (User)",
     "name": "Create_Order__User_",
