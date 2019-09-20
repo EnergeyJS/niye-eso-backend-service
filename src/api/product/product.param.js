@@ -1,6 +1,11 @@
 const Joi = require('joi')
 
 module.exports = {
+  get: {
+    params: {
+      productId: Joi.string().required()
+    }
+  },
   create: {
     header: {
       authorization: Joi.string().required()
@@ -52,7 +57,19 @@ module.exports = {
       limit: Joi.string()
     }
   },
-  get: {
+  adminList: {
+    header: {
+      authorization: Joi.string().required()
+    },
+    query: {
+      skip: Joi.string(),
+      limit: Joi.string()
+    }
+  },
+  Adminget: {
+    header: {
+      authorization: Joi.string().required()
+    },
     params: {
       productId: Joi.string().required()
     }

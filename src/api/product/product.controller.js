@@ -24,7 +24,6 @@ const productData = [
 
 async function load (req, res, next) {
   const id = req.params.productId
-  console.log(id)
   try {
     req.product = await Product.findOne({ '_id': id })
     return next()
@@ -41,7 +40,6 @@ function get (req, res, next) {
 
 async function create (req, res, next) {
   try {
-    console.log(req.body)
     const product = new Product(_.pick(req.body, productData))
     if (req.file) {
       try {
@@ -51,7 +49,6 @@ async function create (req, res, next) {
         next(err)
       }
     }
-    // product.image = req.file ? req.file.location : null
     const savedProduct = await product.save()
     const sendProduct = _.pick(savedProduct, productData)
     return res.json(sendProduct)

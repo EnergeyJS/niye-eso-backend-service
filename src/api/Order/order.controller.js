@@ -11,10 +11,8 @@ const OrderedData = [
 ]
 
 async function get (req, res, next) {
-  console.log('In get----------------------')
   try {
     const id = req.params.OrderedId
-    console.log(id)
     const OrderededData = await OrderedProduct
       .findOne({ '_id': id })
       .populate('OrderedProduct.productId')
@@ -26,12 +24,10 @@ async function get (req, res, next) {
 
 async function create (req, res, next) {
   try {
-    console.log('userId....', req.auth._id)
     const orderedProduct = new OrderedProduct(_.pick(req.body, OrderedData))
     orderedProduct.user = req.auth._id
     const saveOrderedProduct = await orderedProduct.save()
     const sendOrderedProduct = _.pick(saveOrderedProduct, OrderedData)
-    console.log(saveOrderedProduct)
     return res.json(sendOrderedProduct)
   } catch (e) {
     let err = e
@@ -43,7 +39,6 @@ async function create (req, res, next) {
 }
 
 async function list (req, res, next) {
-  console.log('userId....', req.auth._id)
   try {
     const OrderedProducts = await OrderedProduct.list(req.query)
     return res.json(OrderedProducts)
@@ -57,7 +52,7 @@ async function remove (req, res, next) {
     const id = req.params.OrderedId
     const orderedProduct = await OrderedProduct.findOne({ '_id': id })
     const deletedOrderedProduct = await orderedProduct.remove()
-    const sendOrderedProduct = _.pick(deletedOrderedProduct, ['OrderedProduct'])
+    const sendOrderedProduct = _.pick(deletedOrderedProduct, ['user', 'OrderedProduct'])
     return res.json(sendOrderedProduct)
   } catch (e) {
     next(e)

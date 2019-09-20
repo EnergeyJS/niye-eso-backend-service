@@ -6,7 +6,7 @@ const Multer = require('multer')
 const productParam = require('./product.param')
 const productCntrl = require('./product.controller')
 
-const { guardUser } = require('../../libs/jwToken')
+const { guardUser, adminCheck } = require('../../libs/jwToken')
 
 const multer = Multer({
   storage: Multer.memoryStorage(),
@@ -20,9 +20,9 @@ const router = Router()
 router.route('/')
 
 /**
-   * @api {get} /api/product GET Products List (User)
-   * @apiName  User Product list
-   * @apiGroup Product
+   * @api {get} /api/products Get Products List (User)
+   * @apiName  Get Product list (User)
+   * @apiGroup Products
    * @apiVersion 1.0.0
    *
    * @apiSuccess {Array} products[] List of product.
@@ -31,55 +31,25 @@ router.route('/')
 
   .get(validate(productParam.list), productCntrl.list)
 
-/**
-   * @api {post} /api/product POST Products (Admin)
-   * @apiName Product
-   * @apiGroup Product
-   * @apiVersion 1.0.0
-   *
-   * @apiParam (body) {string} name name of the product
-   * @apiParam (body) {string} price price of the product
-   * @apiParam (body) {string} description description of the product
-   * @apiParam (body) {string} quantity Quantity of the product
-   * @apiParam (body) {string} vendors vendors of the product
-   * @apiParam (body) {string} stock stock of one product
-   * @apiParam (body) {string} expires expire Date of the product
-   * @apiParam (body) {array} variant variant of product
-   * @apiParam (body) {string} offer offer of product
-   *
-   * @apiSuccess  {string} name name of the product
-   * @apiSuccess  {string} price price of the product
-   * @apiSuccess  {string} description description of the product
-   * @apiSuccess  {string} quantity Quantity of the product
-   * @apiSuccess  {string} vendors vendors of the product
-   * @apiSuccess  {string} stock stock of one product
-   * @apiSuccess  {string} expires expire Date of the product
-   * @apiSuccess  {array} variant variant of product
-   * @apiSuccess  {string} offer offer of product
-   * @apiError    {Object} error Error response
-   */
-
-  .post(guardUser(), multer.single('variant'), validate(productParam.create), productCntrl.create)
-
 router.route('/:productId')
 /**
- * @api {get} /api/product/:productId Get product
- * @apiName Get Product
- * @apiGroup Product
+ * @api {get} /api/products/:productId Get A Specific Product Details (User)
+ * @apiName Get Product Details (User)
+ * @apiGroup Products
  * @apiVersion 1.0.0
  *
  * @apiParam (param) {string} productId _id of Product
  *
- * @apiSuccess {String} _id Id of newly created property Object
- * @apiSuccess  (body) {string} name name of the product
- * @apiSuccess  (body) {string} price price of the product
- * @apiSuccess  (body) {string} description description of the product
- * @apiSuccess  (body) {string} quantity Quantity of the product
- * @apiSuccess  (body) {string} vendors vendors of the product
- * @apiSuccess  (body) {string} stock stock of one product
- * @apiSuccess  (body) {string} expires expire Date of the product
- * @apiSuccess  (body) {array} variant variant of product
- * @apiSuccess  (body) {string} offer offer of product
+ * @apiSuccess  {String} _id Id of the Product
+ * @apiSuccess  {string} name name of the product
+ * @apiSuccess  {string} price price of the product
+ * @apiSuccess  {string} description description of the product
+ * @apiSuccess  {array} measure measurement of the product
+ * @apiSuccess  {string} vendors vendors of the product
+ * @apiSuccess  {boolean} stock stock of one product
+ * @apiSuccess  {string} expires expire Date of the product
+ * @apiSuccess  {array} variant variant of product
+ * @apiSuccess  {string} offer offer of product
  * @apiError {Object} error Error response
  */
   .get(validate(productParam.get), productCntrl.get)
@@ -87,36 +57,37 @@ router.route('/:productId')
 router.route('/admin')
 
 /**
-   * @api {get} /api/product/admin GET Product List (Admin)
-   * @apiName  Admin Product list
-   * @apiGroup Product
+   * @api {get} /api/products/admin Get Product List (Admin)
+   * @apiName Get Product list (Admin)
+   * @apiGroup Products
    * @apiVersion 1.0.0
    *
    * @apiSuccess {Array} products[] List of product.
    * @apiError {Object} error Error response
    */
-  .get(productCntrl.listAdmin)
+  .get(guardUser(), adminCheck, validate(productParam.adminList), productCntrl.listAdmin)
 
 /**
-   * @api {post} /api/product/admin Create Products (Admin)
-   * @apiName Admin Post Product
-   * @apiGroup Product
+   * @api {post} /api/products/admin Create Products (Admin)
+   * @apiName Create Products (Admin)
+   * @apiGroup Products
    * @apiVersion 1.0.0
    *
    * @apiParam (body) {string} name name of the product
    * @apiParam (body) {string} price price of the product
    * @apiParam (body) {string} description description of the product
-   * @apiParam (body) {string} quantity Quantity of the product
+   * @apiParam (body) {array} measure measurement of the product
    * @apiParam (body) {string} vendors vendors of the product
-   * @apiParam (body) {string} stock stock of one product
+   * @apiParam (body) {boolean} stock stock of one product
    * @apiParam (body) {string} expires expire Date of the product
    * @apiParam (body) {array} variant variant of product
    * @apiParam (body) {string} offer offer of product
    *
+   * @apiSuccess  {String} _id Id of the Product
    * @apiSuccess  {string} name name of the product
    * @apiSuccess  {string} price price of the product
    * @apiSuccess  {string} description description of the product
-   * @apiSuccess  {string} quantity Quantity of the product
+   * @apiSuccess  {array} measure measurement of the product
    * @apiSuccess  {string} vendors vendors of the product
    * @apiSuccess  {string} stock stock of one product
    * @apiSuccess  {string} expires expire Date of the product
@@ -125,36 +96,39 @@ router.route('/admin')
    * @apiError    {Object} error Error response
    */
 
-  .post(validate(productParam.create), productCntrl.create)
+  .post(guardUser(), adminCheck, multer.single('variant'), validate(productParam.create), productCntrl.create)
 
 router
-  .route('/:productId/admin')
+  .route('/admin/:productId')
   /**
- * @api {get} /api/product/:productId/admin Get product  Details for Admin
- * @apiName Get Product Admin
- * @apiGroup Product
+ * @api {get} /api/products/admin/:productId Get a specific product Details for (Admin)
+ * @apiName Get Product Details (Admin)
+ * @apiGroup Products
  * @apiVersion 1.0.0
  *
  * @apiParam (param) {string} productId _id of Product
  *
- * @apiSuccess {String} _id Id of newly created property Object
- * @apiSuccess  (body) {string} name name of the product
- * @apiSuccess  (body) {string} price price of the product
- * @apiSuccess  (body) {string} description description of the product
- * @apiSuccess  (body) {string} quantity Quantity of the product
- * @apiSuccess  (body) {string} vendors vendors of the product
- * @apiSuccess  (body) {string} stock stock of one product
- * @apiSuccess  (body) {string} expires expire Date of the product
- * @apiSuccess  (body) {array} variant variant of product
- * @apiSuccess  (body) {string} offer offer of product
+ * @apiSuccess {String} _id Id of the Product
+ * @apiSuccess {string} name name of the product
+ * @apiSuccess {string} price price of the product
+ * @apiSuccess {string} description description of the product
+ * @apiSuccess {array} measure measurement of the product
+ * @apiSuccess {boolean} stock stock of one product
+ * @apiSuccess {string} expires expire Date of the product
+ * @apiSuccess {array} variant variant of product
+ * @apiSuccess {string} offer offer of product
  * @apiError {Object} error Error response
  */
-  .get(validate(productParam.get), productCntrl.get)
+  .get(guardUser(),
+    adminCheck,
+    validate(productParam.Adminget),
+    productCntrl.get
+  )
 
 /**
-   * @api {post} /api/product/{productId}/admin Update a Product (Admin)
-   * @apiName Admin Update Product
-   * @apiGroup Product
+   * @api {put} /api/products/admin/:productId Update a Product (Admin)
+   * @apiName Update Product (Admin)
+   * @apiGroup Products
    * @apiVersion 1.0.0
    *
    * @apiParam (param) {string} productId _id of Product
@@ -162,30 +136,31 @@ router
    * @apiParam (body) {string} name name of the product
    * @apiParam (body) {string} price price of the product
    * @apiParam (body) {string} description description of the product
-   * @apiParam (body) {string} quantity Quantity of the product
+   * @apiParam (body) {array} measure measurement of the product
    * @apiParam (body) {string} vendors vendors of the product
-   * @apiParam (body) {string} stock stock of one product
+   * @apiParam (body) {boolean} stock stock of one product
    * @apiParam (body) {string} expires expire Date of the product
    * @apiParam (body) {array} variant variant of product
    * @apiParam (body) {string} offer offer of product
    *
+   * @apiSuccess  {String} _id Id of the Product
    * @apiSuccess  {string} name name of the product
    * @apiSuccess  {string} price price of the product
    * @apiSuccess  {string} description description of the product
-   * @apiSuccess  {string} quantity Quantity of the product
+   * @apiSuccess  {array} measure measurement of the product
    * @apiSuccess  {string} vendors vendors of the product
-   * @apiSuccess  {string} stock stock of one product
+   * @apiSuccess  {boolean} stock stock of one product
    * @apiSuccess  {string} expires expire Date of the product
    * @apiSuccess  {array} variant variant of product
    * @apiSuccess  {string} offer offer of product
    * @apiError    {Object} error Error response
    */
-  .put(guardUser(), validate(productParam.update), productCntrl.update)
+  .put(guardUser(), adminCheck, validate(productParam.update), productCntrl.update)
 
 /**
-   * @api {delete} /api/product/:productId/admin Delete a Product (Admin)
+   * @api {delete} /api/products/admin/:productId Delete a Product (Admin)
    * @apiName Delete Product (Admin)
-   * @apiGroup Product
+   * @apiGroup Products
    * @apiVersion 1.0.0
    *
    * @apiParam (param) {String} productId _id of a Product
@@ -195,7 +170,7 @@ router
    * @apiError {Object} error Error response
    */
 
-  .delete(guardUser(), validate(productParam.delete), productCntrl.remove)
+  .delete(guardUser(), adminCheck, validate(productParam.delete), productCntrl.remove)
 
 router.param('productId', productCntrl.load)
 

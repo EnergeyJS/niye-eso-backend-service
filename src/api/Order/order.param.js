@@ -2,6 +2,9 @@ const Joi = require('joi')
 
 module.exports = {
   list: {
+    header: {
+      authorization: Joi.string().required()
+    },
     query: {
       skip: Joi.string(),
       limit: Joi.string()
