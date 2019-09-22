@@ -22,7 +22,8 @@ const mongoOption = {
   useCreateIndex: true,
   keepAlive: true,
   useNewUrlParser: true,
-  useFindAndModify: false
+  useFindAndModify: false,
+  useUnifiedTopology: true
 }
 
 /**
